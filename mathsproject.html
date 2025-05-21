@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Jeu des Cartes Mystères</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    #game {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 15px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      width: 100px;
+      height: 140px;
+      background-color: #21aeda;
+      color: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s;
+    }
+
+    .card.revealed {
+      background-color: #87d5ec;
+      cursor: default;
+    }
+
+    #message {
+      margin: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    #reset {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #122258;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #reset:hover {
+      background-color: #2349c7;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Choose a card</h1>
+  <div id="game"></div>
+  <div id="message"></div>
+  <button id="reset">Réinitialiser</button>
+
+  <script>
+const instructions = [
+  "Remove 1 fish",
+  "Remove 2 fish",
+  "Remove 3 fish",
+  "Remove 4 fish",
+  "Remove 5 fish",
+  "Add 1 fish",
+  "Add 2 fish",
+  "Add 3 fish",
+  "Add 4 fish",
+  "Add 5 fish"
+];
+
+
+    const gameContainer = document.getElementById('game');
+    const messageDiv = document.getElementById('message');
+    const resetButton = document.getElementById('reset');
+
+    let alreadyClicked = false;
+
+    function initGame() {
+      gameContainer.innerHTML = '';
+      messageDiv.textContent = '';
+      alreadyClicked = false;
+
+      for (let i = 0; i < 9; i++) {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.dataset.index = i;
+        card.textContent = "";
+        card.addEventListener('click', () => revealCard(card));
+        gameContainer.appendChild(card);
+      }
+    }
+
+    function revealCard(card) {
+      if (alreadyClicked || card.classList.contains('revealed')) return;
+      const randomInstruction = instructions[Math.floor(Math.random() * instructions.length)];
+      card.textContent = randomInstruction;
+      card.classList.add('revealed');
+      alreadyClicked = true;
+      messageDiv.textContent = `You got : "${randomInstruction}"`;
+    }
+
+    resetButton.addEventListener('click', initGame);
+
+    // Initialisation du jeu au chargement
+    initGame();
+  </script>
+
+</body>
+</html>
