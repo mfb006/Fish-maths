@@ -13,28 +13,46 @@
 
     h1 {
       margin-bottom: 20px;
+      font-size: 2.5vw;
     }
 
     #game {
       display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-gap: 15px;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 15px;
       justify-content: center;
       margin-bottom: 20px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .card {
-      width: 100px;
-      height: 140px;
+      width: 100%;
+      aspect-ratio: 5/7;
       background-color: #21aeda;
+      color: white;
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-weight: bold;
+      font-size: 1.5vw;
       cursor: pointer;
       user-select: none;
       transition: background-color 0.3s;
+      position: relative;
       overflow: hidden;
+    }
+
+    .card img {
+      max-width: 100%;
+      max-height: 100%;
+      display: none;
+    }
+
+    .card.revealed img {
+      display: block;
     }
 
     .card.revealed {
@@ -42,22 +60,16 @@
       cursor: default;
     }
 
-    .card img {
-      max-width: 90px;
-      max-height: 130px;
-      border-radius: 8px;
-    }
-
     #message {
       margin: 15px;
-      font-size: 18px;
+      font-size: 1.8vw;
       font-weight: bold;
       color: #333;
     }
 
     #reset {
       padding: 10px 20px;
-      font-size: 16px;
+      font-size: 1.5vw;
       background-color: #122258;
       color: white;
       border: none;
@@ -68,24 +80,43 @@
     #reset:hover {
       background-color: #2349c7;
     }
+
+    /* 🎯 Responsive pour petits écrans */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 6vw;
+      }
+
+      .card {
+        font-size: 4vw;
+      }
+
+      #message {
+        font-size: 4.5vw;
+      }
+
+      #reset {
+        font-size: 5vw;
+        padding: 3vw 5vw;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <h1>Choose a card</h1>
+  <h1>Choisis une carte</h1>
   <div id="game"></div>
   <div id="message"></div>
-  <button id="reset">reset</button>
+  <button id="reset">Réinitialiser</button>
 
   <script>
-    // Just image paths, no instructions
-    const imagePaths = [
-      'picture1.jpeg',
-      'picture2.jpeg',
-      'picture3.jpeg',
-      'picture4.jpeg',
-      'picture5.jpeg',
-      'picture6.jpeg'
+    const images = [
+      "picture1.jpg",
+      "picture2.jpg",
+      "picture3.jpg",
+      "picture4.jpg",
+      "picture5.jpg",
+      "picture6.jpg"
     ];
 
     const gameContainer = document.getElementById('game');
@@ -103,23 +134,25 @@
         const card = document.createElement('div');
         card.classList.add('card');
         card.dataset.index = i;
-        card.addEventListener('click', () => revealCard(card));
+
+        const img = document.createElement('img');
+        img.alt = "Image mystère";
+
+        card.appendChild(img);
+        card.addEventListener('click', () => revealCard(card, img));
         gameContainer.appendChild(card);
       }
     }
 
-    function revealCard(card) {
+    function revealCard(card, img) {
       if (alreadyClicked || card.classList.contains('revealed')) return;
 
-      const randomIndex = Math.floor(Math.random() * imagePaths.length);
-      const img = document.createElement('img');
-      img.src = imagePaths[randomIndex];
-      img.alt = "Carte mystère";
+      const randomImage = images[Math.floor(Math.random() * images.length)];
+      img.src = randomImage;
 
-      card.innerHTML = '';
-      card.appendChild(img);
       card.classList.add('revealed');
       alreadyClicked = true;
+      messageDiv.textContent = "Tu as découvert une carte mystère !";
     }
 
     resetButton.addEventListener('click', initGame);
