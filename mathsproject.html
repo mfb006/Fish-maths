@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Jeu des Cartes Mystères</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    #game {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 15px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      width: 100px;
+      height: 140px;
+      background-color: #21aeda;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s;
+      overflow: hidden;
+    }
+
+    .card.revealed {
+      background-color: #87d5ec;
+      cursor: default;
+    }
+
+    .card img {
+      max-width: 90px;
+      max-height: 130px;
+      border-radius: 8px;
+    }
+
+    #message {
+      margin: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    #reset {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #122258;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #reset:hover {
+      background-color: #2349c7;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Choose a card</h1>
+  <div id="game"></div>
+  <div id="message"></div>
+  <button id="reset">reset</button>
+
+  <script>
+    // Just image paths, no instructions
+    const imagePaths = [
+      'picture1.jpeg',
+      'picture2.jpeg',
+      'picture3.jpeg',
+      'picture4.jpeg',
+      'picture5.jpeg',
+      'picture6.jpeg'
+    ];
+
+    const gameContainer = document.getElementById('game');
+    const messageDiv = document.getElementById('message');
+    const resetButton = document.getElementById('reset');
+
+    let alreadyClicked = false;
+
+    function initGame() {
+      gameContainer.innerHTML = '';
+      messageDiv.textContent = '';
+      alreadyClicked = false;
+
+      for (let i = 0; i < 9; i++) {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.dataset.index = i;
+        card.addEventListener('click', () => revealCard(card));
+        gameContainer.appendChild(card);
+      }
+    }
+
+    function revealCard(card) {
+      if (alreadyClicked || card.classList.contains('revealed')) return;
+
+      const randomIndex = Math.floor(Math.random() * imagePaths.length);
+      const img = document.createElement('img');
+      img.src = imagePaths[randomIndex];
+      img.alt = "Carte mystère";
+
+      card.innerHTML = '';
+      card.appendChild(img);
+      card.classList.add('revealed');
+      alreadyClicked = true;
+    }
+
+    resetButton.addEventListener('click', initGame);
+    initGame();
+  </script>
+
+</body>
+</html>
